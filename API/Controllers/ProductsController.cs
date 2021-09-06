@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -35,15 +36,26 @@ namespace API.Controllers
         }
         //API endpoint are selected as combination of route, method and any root parameter
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
+        // Added optional argument int? brandId and typeId to filteting
+
+        //[FromQuery] is a attribute to tell the httpGet that the ProductSpecParams
+        //is part of the query, before HttpGet was clever enougth to interprate 
+                //the list of attribute
+        public async Task<ActionResult<Helpers.Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productParams)
         {
             //var products = await _productsRepo.ListAllAsync(); // we want to use also the includes (the types and the brands)
 
-            var spec = new ProductsWithTypesAndBrandsSpecification(); 
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams); 
+
+            var countSpec = new ProductWithFiltersForCountSpecification(productParams);
+
+            var totalItems = await _productsRepo.CountAsync(countSpec);
 
             var products = await _productsRepo.ListAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+
+            return Ok( new Pagination<ProductToReturnDto>(productParams.PageIndex, productParams.PageSize, totalItems, data ));
 
            // return Ok(_mapper
              //   .Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
