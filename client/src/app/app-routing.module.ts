@@ -1,9 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { ProductDetailsComponent } from './shop/product-details/product-details.component';
+import { ShopComponent } from './shop/shop.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path: '', component: HomeComponent},
+  //{path: 'shop', component: ShopComponent},
+  //this is loaded only when "shop" path will be used
+  {path: 'shop', loadChildren: () => import('./shop/shop.module').then(mod => mod.ShopModule)},
+  //{path: 'shop/:id', component: ProductDetailsComponent}, //:id like a placeholder
+  {path: '**', redirectTo: '', pathMatch: 'full'} //redirect to homepage if url address has typos
+];
 
 @NgModule({
+  //forRoot it means that is gonna be added to the root module which is app module
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })

@@ -5,6 +5,7 @@ import { IPagination } from '../shared/models/pagination';
 import { IType } from '../shared/models/productType';
 import {map} from 'rxjs/operators';
 import { ShopParams } from '../shared/models/shopParams';
+import { IProduct } from '../shared/models/product';
 
 // this is a decoration
 @Injectable({
@@ -50,6 +51,11 @@ export class ShopService {
     // response. We need to project that in a IPagination.
     // To achieve that we use pipe, we want to pipe the response into something.
     // inside the pipe we can make use of rxjs methods
+  }
+
+  getProduct(id: number){
+    //in the angle bracket we specify what we return
+    return this.http.get<IProduct>(this.baseUrl + 'products/' + id)
   }
 
   getBrands(){
