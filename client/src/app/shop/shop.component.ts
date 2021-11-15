@@ -10,11 +10,14 @@ import { ShopService } from './shop.service';
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.scss']
 })
+// Because we assume that our http request are always going to be completed (e.g. not a busy server)
+// than there is not need to unsubscribe 
 export class ShopComponent implements OnInit {
   //property
 
-   // static true because is not relayng on any dinamic actvity
-  @ViewChild('search', {static: true}) searchTerm: ElementRef;
+   // static true because is not relayng on any dinamic actvity --> set now to false, not static
+   // because in the shop.html we added a ngif product
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
 
   products: IProduct[];
   brands: IBrand[];
