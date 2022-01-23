@@ -1,5 +1,6 @@
 using API.Errors;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,6 +11,16 @@ namespace API.Controllers
         public BuggyController(StoreContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("testauth")] //root testauth
+        [Authorize] //this is the attribute 'Authorize'
+        public ActionResult<string> GetSecretText()
+        {
+            return "secret stuff"; //we cannot access this unless we are logged in as user (becuase of attribute 'Authorize')
+            //That means, unless we send a valid jwt token to the server (localhost5001)
+            //the server will validate the signuter the issuer. If the test pass then 
+            // the server will let see the string to the user               
         }
 
         [HttpGet("notfound")]
