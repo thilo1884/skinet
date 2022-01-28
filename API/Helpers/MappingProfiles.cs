@@ -15,6 +15,9 @@ namespace API.Helpers
             .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductUrlResolver>());
 
             CreateMap<Address, AddressDto>().ReverseMap(); //property name are in excat match
+            CreateMap<BasketItemDto, BasketItem>();
+            CreateMap<CustomerBasketDto, CustomerBasket>();
+            
         }
     }
 }
