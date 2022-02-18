@@ -15,7 +15,12 @@ export class LoadingInterceptor implements HttpInterceptor {
   constructor(private busyService: BusyService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    this.busyService.busy();
+    if (!request.url.includes('emailexists')) {
+      this.busyService.busy();  //no spinner loading if we are checking if the email exists
+                                // infact to check is a email exists (in the register page) is
+                                // sends an asyin request to the API
+    }
+    
     return next.handle(request).pipe(
       delay(1000), //avaiable from rxjs
       finalize(() => {

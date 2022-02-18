@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http'; //manually added
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from './account/account.service';
 import { BasketService } from './basket/basket.service';
 import { IPagination } from './shared/models/pagination';
 import { IProduct } from './shared/models/product';
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit{
 
   // In the constructore is where we inject the http client into here
   // Even thought this is not best practice. It better to use an Angular Service 
-  constructor(private basketService: BasketService/*private http: HttpClient*/){}
+  constructor(private basketService: BasketService/*private http: HttpClient*/, private accountService: AccountService){}
 
    
   ngOnInit(): void {
@@ -32,6 +33,23 @@ export class AppComponent implements OnInit{
     });*/
 
     //this is a good place to make startup stuff. like to load the basket from localstorage, if is already present
+    this.loadBasket()
+    this.loadCurrentUser();
+    
+  }
+
+  loadCurrentUser(){
+    const token = localStorage.getItem('token');
+    //if(token) {
+      this.accountService.loadCurrentUser(token).subscribe(() => {
+        console.log('loaded user');
+      }, error => {
+        console.log(error)
+      });
+    //}
+  }
+
+  loadBasket() {
     const basketId = localStorage.getItem('basket_id');
     if (basketId) {// if true means we have a basket already in localstorage
       this.basketService.getBasket(basketId).subscribe(() => {
