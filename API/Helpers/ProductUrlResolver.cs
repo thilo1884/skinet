@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 namespace API.Helpers
 {
     // the string is the destination member
+                                    // we go from Product to ProductToReturnDto and we return a string
     public class ProductUrlResolver : IValueResolver<Product, ProductToReturnDto, string>
     {
         private readonly IConfiguration _config;
