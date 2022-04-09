@@ -11,7 +11,7 @@ export class CheckoutSuccessComponent implements OnInit {
   order: IOrder;
 
   constructor(private router: Router) {
-    //we need to get the the navigatioExtra here in the constructor, we can do this in ngOnInit
+    //we need to get the the navigatioExtra here in the constructor, we can not do this in ngOnInit
     const navigation = this.router.getCurrentNavigation();
     const state = navigation && navigation.extras && navigation.extras.state;
     if (state) {
